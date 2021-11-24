@@ -67,7 +67,12 @@ func Select(rs []io.Reader, to time.Duration) (io.Reader, error) {
 		return nil, errors.New("file error")
 	}
 
-	if e.Events != syscall.EPOLLIN {
+	switch {
+	case e.Events == syscall.EPOLLIN:
+		// ready to read
+	case e.Events&syscall.EPOLLHUP != 0 || e.Events&syscall.EPOLLRDHUP != 0:
+		// reader closed or reader+writer closed
+	default:
 		return nil, errors.New("unexpected filter: %v", e)
 	}
 

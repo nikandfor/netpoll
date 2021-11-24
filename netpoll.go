@@ -25,6 +25,7 @@ const (
 	EOF
 	Read
 	Write
+	Closed
 
 	Oneshot
 )

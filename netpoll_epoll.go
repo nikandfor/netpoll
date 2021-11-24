@@ -78,6 +78,14 @@ func wait(efd int, evs []Event, to time.Duration) (n int, err error) {
 		if raw[i].Events|syscall.EPOLLOUT != 0 {
 			evs[i].Event |= Write
 		}
+
+		if raw[i].Events|syscall.EPOLLRDHUP != 0 {
+			evs[i].Event |= EOF
+		}
+
+		if raw[i].Events|syscall.EPOLLHUP != 0 {
+			evs[i].Event |= Closed
+		}
 	}
 
 	return
